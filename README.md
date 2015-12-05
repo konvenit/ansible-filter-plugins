@@ -1,5 +1,4 @@
-# ansible-filter_plugins
-Ansible filter plugins
+# Ansible filter plugins
 
 ## address ##
 Returns host name from `hostname:port` string
