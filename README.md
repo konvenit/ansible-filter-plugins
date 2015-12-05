@@ -2,10 +2,9 @@
 Ansible filter plugins
 
 ## address ##
-Extracts host name from `hostname:port` string.
+Returns host name from `hostname:port` string
 
 Example usage:
-
 ```
 connection_string: 127.0.0.1:5432
 host: "{{ connection_string | address }}" # host=127.0.0.1
@@ -14,10 +13,9 @@ host: "{{ connection_string | address }}" # host=127.0.0.1
 See also [port](#port).
 
 ## byattr ##
-Extracts dict from list of dicts by attribute.
+Returns dict from list of dicts by attribute.
 
 Example usage:
-
 ```
 users:
   - { name: john, uid: 1000, comment: John Doe }
@@ -28,12 +26,11 @@ john_uid:  "{{ john.uid }}"
 ```
 
 ## filename ##
-Returns filename from path and cuts `.j2` extension if available.
+Returns filename from path and trims `.j2` extension if available.
 
 Example usage:
-
 ```
-- name: Copy all template files at once 
+- name: Copy all template files at once
   template:
     src={{ item }}
     dest=/etc/service/conf.d/{{ item | filename }}
@@ -44,10 +41,9 @@ Example usage:
 ```
 
 ## port ##
-Extracts port number from `hostname:port` string.
+Returns port number from `hostname:port` string
 
 Example usage:
-
 ```
 connection_string: 127.0.0.1:5432
 port: "{{ connection_string | port }}" # port=5432
