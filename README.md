@@ -2,7 +2,7 @@
 Ansible filter plugins
 
 ## address ##
-Extracts host name from hostname:port string.
+Extracts host name from `hostname:port` string.
 
 Example usage:
 
@@ -28,7 +28,7 @@ john_uid:  "{{ john.uid }}"
 ```
 
 ## filename ##
-Returns filename from path and cuts .j2 extension if available.
+Returns filename from path and cuts `.j2` extension if available.
 
 Example usage:
 
@@ -44,7 +44,7 @@ Example usage:
 ```
 
 ## port ##
-Extracts port number from hostname:port string.
+Extracts port number from `hostname:port` string.
 
 Example usage:
 
