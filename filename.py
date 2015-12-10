@@ -1,6 +1,8 @@
 # Ansible filename filter plugin
 # Returns filename from path and cuts .j2 extension if available.
 #
+# Marcin Hlybin, ahes@sysadmin.guru
+#
 # Example usage:
 # - name: Copy all template files at once
 #   template:
@@ -10,8 +12,6 @@
 #     group=root
 #     mode=0600
 #   with_fileglob: ../templates/service/*.j2
-#
-# Marcin Hlybin, ahes@sysadmin.guru
 
 import os
 
