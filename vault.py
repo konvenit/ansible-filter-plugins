@@ -28,21 +28,21 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-SECRET_PATH = 'vault.key'
+KEY = 'vault.key'
 
-def vault(cipher_text):
+def vault(cipher):
     try:
         f = fernet()
-        return f.decrypt(bytes(cipher_text))
+        return f.decrypt(bytes(cipher))
     except IOError:
-        raise errors.AnsibleFilterError('vault: could not open secret file: {}. Please run vault.py filter with --key option first and save output to secret file.'.format(os.path.abspath(SECRET_PATH)))
+        raise errors.AnsibleFilterError('vault: could not open secret file: {}. Please run vault.py filter with --key option first and save output to secret file.'.format(os.path.abspath(KEY)))
     except InvalidToken:
         raise errors.AnsibleFilterError('vault: could not decrypt variable. Invalid secret key.')
     except:
         raise errors.AnsibleFilterError('vault: unknown error: {} {}'.format(sys.exc_type, sys.exc_value))
 
 def fernet():
-    with open(SECRET_PATH   , 'rb') as f:
+    with open(KEY, 'rb') as f:
         key = f.read().rstrip()
         return Fernet(key)
 
