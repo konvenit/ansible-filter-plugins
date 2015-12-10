@@ -29,6 +29,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 KEY = 'vault.key'
+SALT = os.urandom(16) # Set non-random salt if you want to recreate the same vault.key using the password in the future
 
 def vault(cipher):
     try:
@@ -59,11 +60,10 @@ if __name__ == '__main__':
     parser.add_argument('--decrypt', metavar='CRYPT', action='store', help='decrypt string from cipher text')
     args = parser.parse_args()
     if args.key:
-        salt = os.urandom(16)
         kdf = PBKDF2HMAC(
-            algorithm=hashes.SHA256(),
+            algorithm=hashes.SHA512(),
             length=32,
-            salt=salt,
+            salt=SALT,
             iterations=1000000,
             backend=default_backend()
         )
