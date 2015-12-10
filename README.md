@@ -47,3 +47,21 @@ Example usage:
 connection_string: 127.0.0.1:5432
 port: "{{ connection_string | port }}" # port=5432
 ```
+
+## vault ##
+Returns decrypted text from cipher text using secret key file. Allows to get rid of plain text passwords in ansible repository.
+
+Before use generate key file with command:
+```python filter_plugins/vaul.py --key YOUR_SECRET_PASSWORD > vault.key```
+
+Example usage:
+
+```
+password_crypt: gAAAAABWaAzLMEGfSUlgU3gDKJZmclNZrhr3Kz0Ev9zKCeskdkaGzdDTwC1XKtHeF1jClHRJ7SFJXYxo5l0wx1nX_4g7zA5nrw==
+password_plain: "{{ password_crypt | vault }}"
+```
+or:
+
+```
+password: "{{ 'gAAAAABWaAzLMEGfSUlgU3gDKJZmclNZrhr3Kz0Ev9zKCeskdkaGzdDTwC1XKtHeF1jClHRJ7SFJXYxo5l0wx1nX_4g7zA5nrw==' | vault }}"
+```
