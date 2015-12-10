@@ -73,3 +73,4 @@ Filter commands for inline encrypting/decrypting:
 ```
 python filter_plugins/vault.py --encrypt 'secret value'
 python filter_plugins/vault.py --decrypt gAAAAABWaAzLMEGfSUlgU3gDKJZmclNZrhr3Kz0Ev9zKCeskdkaGzdDTwC1XKtHeF1jClHRJ7SFJXYxo5l0wx1nX_4g7zA5nrw==
+```
