@@ -64,7 +64,7 @@ if __name__ == '__main__':
             algorithm=hashes.SHA256(),
             length=32,
             salt=salt,
-            iterations=100000,
+            iterations=1000000,
             backend=default_backend()
         )
         print base64.urlsafe_b64encode(kdf.derive(args.key))
