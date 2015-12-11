@@ -54,10 +54,11 @@ Returns decrypted text from cipher text using secret key file. Allows to get rid
 Configuration options in ansible.cfg:
 
 ```
-vault_filter_key = vault.key
-vault_filter_salt = 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824 # do not use this one, generate with '--salt' option
-vault_filter_iterations = 1000000
-vault_password_file = vault.pass # this is from ansible-vault, if specified vault filter will use this password to generate vault key
+vault_filter_key = vault.key # might be relative or absolute path
+vault_filter_salt = 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824 # generate with '--salt' option
+vault_filter_iterations = 1000000 # PBKDF2-SHA512 iterations
+vault_filter_generate_key = yes # automatically generate vault key during playbook runtime
+vault_password_file = vault.pass # this is from ansible-vault, if specified vault filter will use this password to generate vault filter key
 ```
 
 How to use:
@@ -84,6 +85,8 @@ How to use:
 5. when needed you may decrypt password
 
 `python filter_plugins/vault.py --decrypt gAAAAABWasKsAvkyCqmc_8p57vGHOHkAG4nU4vo8t6n6C-j3hItbiwC1BRLnrHBJtrDP1Rz2wG1HULRG_zkXF596H0dn-69S92Ky3ixDOCAGesFptH1-glQ=``
+
+If you set you set `vault_filter_generate_key = yes` and `vault_password_file` option is present and vault filter salt is defined in ansible.cfg vault key file will be generated automatically without any message while playbook is running. This option can be useful with Ansible Tower. It might be a good idea to remove vault key in post_tasks in your playbook.
 
 Example variable formats in hostvars:
 
