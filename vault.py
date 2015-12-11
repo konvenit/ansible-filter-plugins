@@ -145,23 +145,20 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.quiet: verbose=False
 
-    if args.key:
-        try:
-            vault_key()
-        except:
-            print('ERROR: ' + str(sys.exc_value))
-            sys.exit(1)
-    elif args.salt:
-        digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
-        digest.update(os.urandom(32))
-        print("Save following line to ansible.cfg config file under [{}]:".format(FILTERS))
-        print("vault_filter_salt = {}".format(binascii.b2a_hex(digest.finalize())))
-    elif not os.path.isfile(vault_filter_key):
-        print ("Vault filter key '{}' not found. Please create it first with '--key' option.".format(vault_filter_key))
+    try:
+        if args.key:
+                vault_key()
+        elif args.salt:
+            digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
+            digest.update(os.urandom(32))
+            print("Save following line to ansible.cfg config file under [{}]:".format(FILTERS))
+            print("vault_filter_salt = {}".format(binascii.b2a_hex(digest.finalize())))
+        elif args.encrypt:
+            f = fernet()
+            print(f.encrypt(args.encrypt))
+        elif args.decrypt:
+            f = fernet()
+            print(f.decrypt(args.decrypt))
+    except:
+        print('ERROR: ' + str(sys.exc_value))
         sys.exit(1)
-    elif args.encrypt:
-        f = fernet()
-        print(f.encrypt(args.encrypt))
-    elif args.decrypt:
-        f = fernet()
-        print(f.decrypt(args.decrypt))
