@@ -75,9 +75,11 @@ def vault(cipher):
         f = fernet()
         return f.decrypt(bytes(cipher))
     except IOError:
-        raise errors.AnsibleFilterError('vault: could not open secret file: {}. Please run vault.py filter file with --key option first.'.format(vault_filter_key))
+        raise errors.AnsibleFilterError("vault: could not open key file: {}. Please run 'vault.py' filter file with --key option first.".format(vault_filter_key))
     except InvalidToken:
-        raise errors.AnsibleFilterError('vault: could not decrypt variable. Invalid secret key.')
+        raise errors.AnsibleFilterError("vault: could not decrypt variable. Invalid vault key.")
+    except ValueError:
+        raise errors.AnsibleFilterError("vault: variable vault_filter_salt is not defined in ansible config")
     except:
         raise errors.AnsibleFilterError('vault: unknown error: {} {}'.format(sys.exc_type, sys.exc_value))
 
@@ -93,12 +95,10 @@ def fernet():
 
 def vault_key():
     if not VAULT_FILTER_SALT:
-        if verbose: print("ERROR: Variable 'vault_filter_salt' is not set in ansible.cfg file. Please generate salt with '--salt' option.")
-        sys.exit(1)
+        raise ValueError("Variable 'vault_filter_salt' is not set in ansible.cfg file. Please generate salt with '--salt' option.")
 
     if os.path.isfile(vault_filter_key):
-        if verbose: print("ERROR: Vault filter key '{}' already exists. Remove it first to generate new one.".format(vault_filter_key))
-        sys.exit(1)
+        raise IOError("Vault filter key '{}' already exists. Remove it first to generate new one.".format(vault_filter_key))
 
     if verbose: print("Vault filer key '{}' not found".format(vault_filter_key))
     if C.DEFAULT_VAULT_PASSWORD_FILE:
@@ -106,8 +106,10 @@ def vault_key():
         with open(C.DEFAULT_VAULT_PASSWORD_FILE, 'rb') as f:
             vault_password = f.read().rstrip()
     else:
-        print("Generating vault filter key using user password")
-        vault_password = getpass.getpass('Password: ')
+        print("Generating vault filter key with user provided password")
+        vault_password = getpass.getpass('Key password: ')
+        if len(vault_password) < 8:
+            raise ValueError("Key password too short (>= 8)")
 
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA512(),
@@ -140,7 +142,11 @@ if __name__ == '__main__':
     if args.quiet: verbose=False
 
     if args.key:
-        vault_key()
+        try:
+            vault_key()
+        except:
+            print('ERROR: ' + str(sys.exc_value))
+            sys.exit(1)
     elif args.salt:
         digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
         digest.update(os.urandom(32))
