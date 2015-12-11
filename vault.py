@@ -137,8 +137,12 @@ if __name__ == '__main__':
     parser.add_argument('-e', '--encrypt', metavar='TEXT', action='store', help='encrypt string from plain text')
     parser.add_argument('-d', '--decrypt', metavar='CRYPT', action='store', help='decrypt string from cipher text')
     parser.add_argument('-q', '--quiet', action='store_true', help='do not output info messages')
-    args = parser.parse_args()
 
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(1)
+
+    args = parser.parse_args()
     if args.quiet: verbose=False
 
     if args.key:
