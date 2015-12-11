@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-# Ansible port filter plugin
+# Ansible vault filter 
 # Returns decrypted text from cipher text using secret key file
 # Allows to get rid of plain text passwords in ansible repository
 # without using ansible-vault and encrypting whole files
