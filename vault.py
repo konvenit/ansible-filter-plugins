@@ -31,7 +31,7 @@ from __future__ import print_function
 # 5. when needed you may decrypt password
 #    python filter_plugins/vault.py --decrypt gAAAAABWasKsAvkyCqmc_8p57vGHOHkAG4nU4vo8t6n6C-j3hItbiwC1BRLnrHBJtrDP1Rz2wG1HULRG_zkXF596H0dn-69S92Ky3ixDOCAGesFptH1-glQ=
 #
-# If you set you set vault_filter_generate_key = yes and vault_password_file option is present and vault filter salt is defined in ansible.cfg  
+# If you set you set vault_filter_generate_key = yes and vault_password_file option is present and vault filter salt is defined in ansible.cfg
 # vault key file will be generated automatically without any message while playbook is running. This option can be useful with Ansible Tower.
 # It might be a good idea to remove vault key in post_tasks in your playbook.
 #
@@ -123,11 +123,11 @@ class FilterModule(object):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--salt', action='store', help='generate vault filter salt for ansible.cfg config')
-    parser.add_argument('--key', action='store_true', help='generate secret key from password prompt or using ansible vault password')
-    parser.add_argument('--encrypt', metavar='TEXT', action='store', help='encrypt string from plain text')
-    parser.add_argument('--decrypt', metavar='CRYPT', action='store', help='decrypt string from cipher text')
-    parser.add_argument('--quiet', action='store_true', help='do not output info messages')
+    parser.add_argument('-s', '--salt', action='store', help='generate vault filter salt for ansible.cfg config')
+    parser.add_argument('-k', '--key', action='store_true', help='generate secret key from password prompt or using ansible vault password')
+    parser.add_argument('-e', '--encrypt', metavar='TEXT', action='store', help='encrypt string from plain text')
+    parser.add_argument('-d', '--decrypt', metavar='CRYPT', action='store', help='decrypt string from cipher text')
+    parser.add_argument('-q', '--quiet', action='store_true', help='do not output info messages')
     args = parser.parse_args()
 
     if args.quiet: verbose=False
