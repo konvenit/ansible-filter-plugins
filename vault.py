@@ -10,7 +10,7 @@ from __future__ import print_function
 # Configuration options in ansible.cfg - notice section name 'filters':
 # [filters]
 # vault_filter_key = vault.key # might be relative or absolute path
-# vault_filter_salt = 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824 # generate with '--salt' option
+# vault_filter_salt = 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824 # generate random salt with '--salt' option
 # vault_filter_iterations = 1000000 # PBKDF2-SHA512 iterations
 # vault_filter_generate_key = yes # automatically generate vault key during playbook runtime
 #
@@ -18,8 +18,8 @@ from __future__ import print_function
 # vault_password_file = vault.pass # this is from ansible-vault, if specified vault filter will use this password to generate vault filter key
 #
 # How to use:
-# 1. generate salt and put it to ansible.cfg file
-#    python filter_plugins/vault.py --salt MY_RANDOM_SALT_STRING
+# 1. generate random salt and put it to ansible.cfg file
+#    python filter_plugins/vault.py --salt
 #
 # 2. generate key file (you will be asked for password if vault_password_file is not defined)
 #    python filter_plugins/vault.py --key
@@ -130,7 +130,7 @@ class FilterModule(object):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--salt', action='store', help='generate vault filter salt for ansible.cfg config')
+    parser.add_argument('-s', '--salt', action='store_true', help='generate random vault filter salt for ansible.cfg config')
     parser.add_argument('-k', '--key', action='store_true', help='generate secret key from password prompt or using ansible vault password')
     parser.add_argument('-e', '--encrypt', metavar='TEXT', action='store', help='encrypt string from plain text')
     parser.add_argument('-d', '--decrypt', metavar='CRYPT', action='store', help='decrypt string from cipher text')
@@ -143,7 +143,7 @@ if __name__ == '__main__':
         vault_key()
     elif args.salt:
         digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
-        digest.update(args.salt)
+        digest.update(os.urandom(32))
         print("Save following line to ansible.cfg config file under [{}]:".format(FILTERS))
         print("vault_filter_salt = {}".format(binascii.b2a_hex(digest.finalize())))
     elif not os.path.isfile(vault_filter_key):
