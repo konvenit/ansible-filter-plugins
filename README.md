@@ -51,13 +51,16 @@ port: "{{ connection_string | port }}" # port=5432
 ## vault ##
 Returns decrypted text from cipher text using secret key file. Allows to get rid of plain text passwords in ansible repository without using `ansible-vault` and encrypting whole files
 
-Configuration options in ansible.cfg:
+Configuration options in ansible.cfg - notice section name *filters*:
 
 ```
+[filters]
 vault_filter_key = vault.key # might be relative or absolute path
 vault_filter_salt = 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824 # generate with '--salt' option
 vault_filter_iterations = 1000000 # PBKDF2-SHA512 iterations
 vault_filter_generate_key = yes # automatically generate vault key during playbook runtime
+
+[defaults]
 vault_password_file = vault.pass # this is from ansible-vault, if specified vault filter will use this password to generate vault filter key
 ```
 

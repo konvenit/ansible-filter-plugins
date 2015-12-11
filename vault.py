@@ -7,11 +7,14 @@ from __future__ import print_function
 #
 # Marcin Hlybin, ahes@sysadmin.guru
 #
-# Configuration options in ansible.cfg
+# Configuration options in ansible.cfg - notice section name 'filters':
+# [filters]
 # vault_filter_key = vault.key # might be relative or absolute path
 # vault_filter_salt = 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824 # generate with '--salt' option
 # vault_filter_iterations = 1000000 # PBKDF2-SHA512 iterations
 # vault_filter_generate_key = yes # automatically generate vault key during playbook runtime
+#
+# [defaults]
 # vault_password_file = vault.pass # this is from ansible-vault, if specified vault filter will use this password to generate vault filter key
 #
 # How to use:
@@ -56,10 +59,13 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-VAULT_FILTER_KEY = C.get_config(C.p, C.DEFAULTS, 'vault_filter_key', 'ANSIBLE_VAULT_FILTER_KEY', 'vault.key', ispath=True)
-VAULT_FILTER_SALT = C.get_config(C.p, C.DEFAULTS, 'vault_filter_salt', 'ANSIBLE_VAULT_FILTER_SALT', None)
-VAULT_FILTER_ITERATIONS = C.get_config(C.p, C.DEFAULTS, 'vault_filter_iterations', 'ANSIBLE_VAULT_FILTER_ITERATIONS', 1000000, integer=True)
-VAULT_FILTER_GENERATE_KEY = C.get_config(C.p, C.DEFAULTS, 'vault_filter_generate_key', 'ANSIBLE_VAULT_GENERATE_KEY', False, boolean=True)
+# section in config file
+FILTERS = 'filters'
+
+VAULT_FILTER_KEY = C.get_config(C.p, FILTERS, 'vault_filter_key', 'ANSIBLE_VAULT_FILTER_KEY', 'vault.key', ispath=True)
+VAULT_FILTER_SALT = C.get_config(C.p, FILTERS, 'vault_filter_salt', 'ANSIBLE_VAULT_FILTER_SALT', None)
+VAULT_FILTER_ITERATIONS = C.get_config(C.p, FILTERS, 'vault_filter_iterations', 'ANSIBLE_VAULT_FILTER_ITERATIONS', 1000000, integer=True)
+VAULT_FILTER_GENERATE_KEY = C.get_config(C.p, FILTERS, 'vault_filter_generate_key', 'ANSIBLE_VAULT_GENERATE_KEY', False, boolean=True)
 
 vault_filter_key = os.path.abspath(VAULT_FILTER_KEY)
 verbose = True
@@ -137,7 +143,7 @@ if __name__ == '__main__':
     elif args.salt:
         digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
         digest.update(args.salt)
-        print("Save following line to ansible.cfg config file under [defaults]:")
+        print("Save following line to ansible.cfg config file under [{}]:".format(FILTERS))
         print("vault_filter_salt = {}".format(binascii.b2a_hex(digest.finalize())))
     elif not os.path.isfile(vault_filter_key):
         print ("Vault filter key '{}' not found. Please create it first with '--key' option.".format(vault_filter_key))
