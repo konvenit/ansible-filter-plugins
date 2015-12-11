@@ -66,15 +66,15 @@ vault_password_file = vault.pass # this is from ansible-vault, if specified vaul
 
 How to use:
 
-1. generate random salt and put it to ansible.cfg file: `python filter_plugins/vault.py --salt`
-2. generate key file (you will be asked for password if vault_password_file is not defined): `python filter_plugins/vault.py --key`
-3. encrypt password to be used in hostvar: `python filter_plugins/vault.py --encrypt my_secret_password_to_database
-4. store encrypted password in hostvars:
+* generate random salt and put it to ansible.cfg file: `python filter_plugins/vault.py --salt`
+* generate key file (you will be asked for password if vault_password_file is not defined): `python filter_plugins/vault.py --key`
+* encrypt password to be used in hostvar: `python filter_plugins/vault.py --encrypt my_secret_password_to_database`
+* store encrypted password in hostvars:
 ```
     vars:
       db_password: {{ 'gAAAAABWasKsAvkyCqmc_8p57vGHOHkAG4nU4vo8t6n6C-j3hItbiwC1BRLnrHBJtrDP1Rz2wG1HULRG_zkXF596H0dn-69S92Ky3ixDOCAGesFptH1-glQ=' | vault }}
 ```
-5. when needed you may decrypt password: `python filter_plugins/vault.py --decrypt gAAAAABWasKsAvkyCqmc_8p57vGHOHkAG4nU4vo8t6n6C-j3hItbiwC1BRLnrHBJtrDP1Rz2wG1HULRG_zkXF596H0dn-69S92Ky3ixDOCAGesFptH1-glQ=``
+* when needed you may decrypt password: `python filter_plugins/vault.py --decrypt gAAAAABWasKsAvkyCqmc_8p57vGHOHkAG4nU4vo8t6n6C-j3hItbiwC1BRLnrHBJtrDP1Rz2wG1HULRG_zkXF596H0dn-69S92Ky3ixDOCAGesFptH1-glQ=`
 
 If you set you set `vault_filter_generate_key = yes` and `vault_password_file` option is present and vault filter salt is defined in ansible.cfg vault key file will be generated automatically without any message while playbook is running. This option can be useful with Ansible Tower. It might be a good idea to remove vault key in post_tasks in your playbook.
 
