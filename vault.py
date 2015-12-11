@@ -94,6 +94,7 @@ def fernet():
 def vault_key():
     if not VAULT_FILTER_SALT:
         if verbose: print("ERROR: Variable 'vault_filter_salt' is not set in ansible.cfg file. Please generate salt with '--salt' option.")
+        sys.exit(1)
 
     if os.path.isfile(vault_filter_key):
         if verbose: print("ERROR: Vault filter key '{}' already exists. Remove it first to generate new one.".format(vault_filter_key))
