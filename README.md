@@ -48,6 +48,24 @@ connection_string: 127.0.0.1:5432
 port: "{{ connection_string | port }}" # port=5432
 ```
 
+## tolist ##
+Returns list from string or list
+
+Example usage:
+
+```
+backup_templates: duplicity
+backup_templates: ['duplicity', 'lvm']
+- name: Copy backup templates
+  template:
+    src={{ item }}.j2
+    dest=/etc/backup.d/{{ item }}
+    owner=root
+    group=root
+    mode=0600
+  with_items: "{{ backup_templates | tolist }}"
+```
+
 ## vault ##
 Returns decrypted text from cipher text using secret key file. Allows to get rid of plain text passwords in ansible repository without using `ansible-vault` and encrypting whole files
 
