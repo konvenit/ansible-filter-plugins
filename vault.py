@@ -43,8 +43,8 @@ from __future__ import print_function
 # password_plain: "{{ password_crypt | vault }}"
 # password: "{{ 'gAAAAABWasKsAvkyCqmc_8p57vGHOHkAG4nU4vo8t6n6C-j3hItbiwC1BRLnrHBJtrDP1Rz2wG1HULRG_zkXF596H0dn-69S92Ky3ixDOCAGesFptH1-glQ=' | vault }}"
 #
-# It is completely save to keep salt value in ansible.cfg - you can push it to your repository.
-# It is *NOT* save to keep vault key in repository! Add it to .gitignore
+# It is completely safe to keep salt value in ansible.cfg - you can push it to your repository.
+# It is *NOT* safe to keep vault key in repository! Add it to .gitignore
 #
 import os
 import sys
