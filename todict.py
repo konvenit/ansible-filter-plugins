@@ -15,23 +15,23 @@
 #   - { name: user2, password: pwd2 }
 
 def todict(array, *keys):
-  output = []
-  for item in array:
-    if type(item) is not list:
-      item = [item]
-    d = dict.fromkeys(keys)
-    for idx, k in enumerate(keys):
-      try:
-        v = item[idx]
-      except IndexError:
-        v = None
-      d.update({ k: v })
-    output.append(d)
+    output = []
+    for item in array:
+        if type(item) is not list:
+            item = [item]
+        d = dict.fromkeys(keys)
+        for idx, k in enumerate(keys):
+            try:
+                v = item[idx]
+            except IndexError:
+                v = None
+            d.update({ k: v })
+        output.append(d)
 
-  return output
+    return output
 
 class FilterModule(object):
-  def filters(self):
-    return {
-      'todict': todict
-  }
+    def filters(self):
+        return {
+            'todict': todict
+        }
