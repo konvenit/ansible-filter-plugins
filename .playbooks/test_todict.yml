@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  vars:
+    users:
+      - user1
+      - user2
+    packages:
+      - [ 'pkg1', '1.1.1' ]
+      - [ 'pkg2', '2.2.2' ]
+    users_dict: "{{ users | todict('name') }}"
+    packages_dict: "{{ packages | todict('name', 'version') }}"
+  tasks:
+    - debug: var=users
+    - debug: var=packages
+    - debug: var=users_dict
+    - debug: var=packages_dict

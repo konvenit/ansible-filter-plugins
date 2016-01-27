@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  vars:
+    users:
+      - { name: user1, uid: 1000, role: sysadmin }
+      - { name: user2, uid: 2000, role: sysadmin }
+    passwords:
+      - { password: pwd1 }
+      - { password: pwd2 }
+    users_with_password: "{{ users | zip(passwords) }}"
+    packages: ['pkg1', 'pkg2', 'pkg3']
+    versions: ['1.1.1', '2.2.2', '3.3.3']
+    packages_with_versions: "{{ packages | zip(versions) }}"
+  tasks:
+    - debug: var=users
+    - debug: var=passwords
+    - debug: var=users_with_password
+    - debug: var=packages_with_versions
