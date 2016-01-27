@@ -24,6 +24,19 @@ john: "{{ users | byattr('name', 'john') }}"
 john_uid:  "{{ john.uid }}"
 ```
 
+## defined ##
+Raises error when variable is not defined or empty
+Optional argument is name of the variable to display in error message
+
+Example usage:
+```
+  - debug: msg="User id is {{ uid | defined }}"
+  - debug: msg="User id is {{ uid | defined('uid') }}"
+
+  Result1: FAILED! => {"failed": true, "msg": "Variable not defined"}
+  Result2: FAILED! => {"failed": true, "msg": "Variable not defined: uid"}
+```
+
 ## filename ##
 Returns filename from path and trims `.j2` extension if available.
 
@@ -46,6 +59,24 @@ Example usage:
 ```
 connection_string: 127.0.0.1:5432
 port: "{{ connection_string | port }}" # port=5432
+```
+
+## todict ##
+Returns list of dicts from list or list of lists
+
+Example usage:
+```
+users:
+  - [ 'user1', 'pwd1' ]
+  - [ 'user2', 'pwd2' ]
+users_dict: "{{ users | todict('name', 'password') }}"
+```
+
+Result is:
+```
+users_dict:
+  - { name: user1, password: pwd1 }
+  - { name: user2, password: pwd2 }
 ```
 
 ## tolist ##
@@ -107,3 +138,116 @@ password: "{{ 'gAAAAABWasKsAvkyCqmc_8p57vGHOHkAG4nU4vo8t6n6C-j3hItbiwC1BRLnrHBJt
 It is completely safe to keep salt value in ansible.cfg - you can push it to your repository.
 
 It is *NOT* safe to keep vault key in repository! Add it to .gitignore
+
+## zip ##
+Returns lists merged together with element pairing. Works for regular lists and for lists of dicts as well.
+
+Arguments available:
+
+*longest=True* (default False)
+
+Can be used when one list is longer than another. Result will be exteneded
+to the number of elements of the longest list. Works also for lists of dicts.
+
+See `test_zip.py` file to understand it thoroughly.
+
+Examples:
+```
+{{ var1 | zip(var2, longest=True) }}
+
+var1:
+  - { name: hello, password: world }
+var2:
+ - { id: 1000 }
+ - { id: 2000 }
+
+var_zip: "{{ var1 | zip(var2, longest=True) }}"
+Result:
+var_zip:
+  - { name: hello, password: world, id: 1000 }
+  - { id: 2000 }
+
+var_zip: "{{ var1 | zip(var2, longest=False) }}"
+Result:
+var_zip:
+  - { name: hello, password: world, id: 1000 }
+```
+
+*fillvalue=None* (default None/null)
+
+When used with longest surplus elements with this value.
+
+See test_zip.py file to understand it thoroughly.
+
+Examples:
+```
+var1: ['a', 'b', 'c']
+var2: ['d', 'e']
+
+var_zip: "{{ var1 | zip(var2, longest=True, fillvalue='NoLetter') }}"
+Result:
+var_zip:
+  - ['a', 'd']
+  - ['b', 'e']
+  - ['c', 'NoLetter']
+```
+
+### Example filter usage ###
+```
+users:
+  - { name: user1, password: hello }
+  - { name: user2, password: world }
+uids:
+  - { uid: 1000 }
+  - { uid: 2000 }
+users_with_uids: "{{ users | zip(uids) }}"
+```
+
+Result would be:
+```
+users_with_uids:
+  - { name: user1, password: hello, uid: 1000 }
+  - { name: user2, password: world, uid: 2000 }
+```
+
+### Sample playbook usage ###
+
+NOTE: Additional filter 'todict' is used.
+```
+- hosts: localhost
+  vars:
+    users:
+      - { name: user1 }
+      - { name: user2 }
+  tasks:
+    - name: Get uids for users
+      command: id -u {{ item.name }}
+      register: uid_results
+      with_items: users
+
+    - set_fact:
+        uids: "{{ uid_results.results | map(attribute='stdout') | todict('uid') }}"
+
+    - set_fact:
+        users: "{{ users | zip(uids) }}"
+
+    - name: Show users with uids
+      debug: var=users
+```
+
+Result:
+```
+TASK [Show users with uids] ****************************************************
+ok: [localhost] => {
+    "users": [
+        {
+            "name": "user1",
+            "uid": "1000"
+        },
+        {
+            "name": "user2",
+            "uid": "2000"
+        }
+    ]
+}
+```
