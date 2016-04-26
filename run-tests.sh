@@ -3,5 +3,5 @@
 for file in .tests/*.py
 do
     echo $file
-    python $file
+    PYTHONPATH=. python $file
 done
