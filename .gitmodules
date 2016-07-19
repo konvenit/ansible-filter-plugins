@@ -1,9 +1,9 @@
 [submodule "ansible-filter-merge"]
 	path = ansible-filter-merge
-	url = git@github.com:ahes/ansible-filter-merge.git
+	url = https://github.com/ahes/ansible-filter-merge.git
 [submodule "ansible-filter-zip"]
 	path = ansible-filter-zip
-	url = git@github.com:ahes/ansible-filter-zip.git
+	url = https://github.com/ahes/ansible-filter-zip.git
 [submodule "ansible-filter-vault"]
 	path = ansible-filter-vault
-	url = git@github.com:ahes/ansible-filter-vault.git
+	url = https://github.com/ahes/ansible-filter-vault.git
