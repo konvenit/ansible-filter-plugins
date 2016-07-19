@@ -33,5 +33,6 @@ def todict(array, *keys):
 class FilterModule(object):
     def filters(self):
         return {
-            'todict': todict
+            'todict': todict,
+            'to_dict': todict
         }

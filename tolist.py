@@ -24,5 +24,6 @@ def tolist(value):
 class FilterModule(object):
     def filters(self):
         return {
-            'tolist': tolist
+            'tolist': tolist,
+            'to_list': tolist
         }
