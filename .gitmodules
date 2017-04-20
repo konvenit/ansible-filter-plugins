@@ -6,4 +6,4 @@
 	url = https://github.com/ahes/ansible-filter-zip.git
 [submodule "ansible-filter-vault"]
 	path = ansible-filter-vault
-	url = https://github.com/ahes/ansible-filter-vault.git
+	url = https://github.com/konvenit/ansible-filter-vault.git
